@@ -57,6 +57,8 @@ export default function RegisterPage() {
             padding: "8px",
             marginBottom: "10px",
             color: "black",
+            border: "2px solid black",
+            outline: "none",
           }}
         />
 
@@ -70,6 +72,8 @@ export default function RegisterPage() {
             padding: "8px",
             marginBottom: "5px",
             color: "black",
+            border: "2px solid black",
+            outline: "none",
           }}
         />
 
@@ -85,6 +89,8 @@ export default function RegisterPage() {
             padding: "8px",
             marginBottom: "10px",
             color: "black",
+            border: "2px solid black",
+            outline: "none",
           }}
         />
 
@@ -96,6 +102,8 @@ export default function RegisterPage() {
             padding: "8px",
             marginBottom: "15px",
             color: "black",
+            border: "2px solid black",
+            outline: "none",
           }}
         >
           <option value="admin">Admin</option>

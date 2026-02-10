@@ -60,7 +60,7 @@ export default function LoginPage() {
           placeholder="usuario@alumno.ieselrincon.es"
           value={email}
           onChange={(e) => validarEmail(e.target.value)}
-          style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+          style={{ width: "100%", padding: "8px", marginBottom: "10px", color: "black", border: "2px solid black", outline: "none" }}
         />
 
         {error && <p style={{ color: "red" }}>{error}</p>}
@@ -70,7 +70,7 @@ export default function LoginPage() {
           placeholder="Contraseña"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+          style={{ width: "100%", padding: "8px", marginBottom: "10px", color: "black", border: "2px solid black", outline: "none" }}
         />
 
         <button
