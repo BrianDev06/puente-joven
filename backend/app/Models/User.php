@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'user_type',
+        'api_token',
     ];
 
     
@@ -35,6 +37,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'api_token',
     ];
 
     /**
@@ -55,5 +58,22 @@ class User extends Authenticatable
         return new Attribute(
             get: fn () => $this->user_type === \App\Enums\UserType::Admin,
         );
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'role_user');
+    }
+
+    public function hasRole(string $roleName): bool
+    {
+        return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    public function hasPermission(string $permissionName): bool
+    {
+        return $this->roles()
+            ->whereHas('permissions', fn ($query) => $query->where('name', $permissionName))
+            ->exists();
     }
 }
