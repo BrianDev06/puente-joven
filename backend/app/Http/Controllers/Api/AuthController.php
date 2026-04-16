@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Enum;
@@ -20,6 +21,16 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'user_type' => ['required', new Enum(UserType::class)],
+            // Nuevos campos
+            'apellidos' => ['nullable', 'string', 'max:255'],
+            'dni_cif' => ['nullable', 'string', 'max:20'],
+            'fecha_nacimiento' => ['nullable', 'date'],
+            'ciclo' => ['nullable', 'string', 'in:DAW,DAM,ASIR'],
+            'departamento' => ['nullable', 'string', 'max:255'],
+            'especialidad' => ['nullable', 'string', 'max:255'],
+            'nombre_comercial' => ['nullable', 'string', 'max:255'],
+            'web' => ['nullable', 'string', 'max:255'],
+            'direccion' => ['nullable', 'string', 'max:500'],
         ]);
 
         $plainToken = Str::random(60);
@@ -30,12 +41,23 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password']),
             'user_type' => $validated['user_type'],
             'api_token' => hash('sha256', $plainToken),
+            // Asignar campos de perfil si vienen
+            'apellidos' => $validated['apellidos'] ?? null,
+            'dni_cif' => $validated['dni_cif'] ?? null,
+            'fecha_nacimiento' => $validated['fecha_nacimiento'] ?? null,
+            'ciclo' => $validated['ciclo'] ?? null,
+            'departamento' => $validated['departamento'] ?? null,
+            'especialidad' => $validated['especialidad'] ?? null,
+            'nombre_comercial' => $validated['nombre_comercial'] ?? null,
+            'web' => $validated['web'] ?? null,
+            'direccion' => $validated['direccion'] ?? null,
         ]);
 
         // Asignar rol por defecto según tipo de usuario.
         $roleName = match ($validated['user_type']) {
             'profesor' => 'profesor',
             'alumno' => 'alumno',
+            'empresa' => 'empresa',
             default => 'admin',
         };
         $role = \App\Models\Role::where('name', $roleName)->first();
@@ -113,8 +135,18 @@ class AuthController extends Controller
             'name' => $user->name,
             'email' => $user->email,
             'user_type' => $user->user_type,
+            'apellidos' => $user->apellidos,
+            'dni_cif' => $user->dni_cif,
+            'fecha_nacimiento' => $user->fecha_nacimiento,
+            'ciclo' => $user->ciclo,
+            'departamento' => $user->departamento,
+            'especialidad' => $user->especialidad,
+            'nombre_comercial' => $user->nombre_comercial,
+            'web' => $user->web,
+            'direccion' => $user->direccion,
             'roles' => $roles,
             'permissions' => $permissions,
+            'can_create_offer' => Gate::forUser($user)->allows('create', \App\Models\Offer::class),
             'created_at' => $user->created_at,
         ];
     }

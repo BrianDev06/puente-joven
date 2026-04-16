@@ -1,25 +1,47 @@
-const TOKEN_KEY = "pj_auth_token";
+/**
+ * Authentication and User Persistence Utilities
+ */
 
-export function getApiBaseUrl(): string {
+const TOKEN_KEY = "pj_auth_token";
+const USER_KEY = "pj_auth_user";
+
+function getApiBaseUrl(): string {
   return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 }
 
-export function saveToken(token: string): void {
+function saveToken(token: string): void {
   if (typeof window === "undefined") return;
   localStorage.setItem(TOKEN_KEY, token);
 }
 
-export function getToken(): string | null {
+function getToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(TOKEN_KEY);
 }
 
-export function clearToken(): void {
+function saveUser(user: any): void {
   if (typeof window === "undefined") return;
-  localStorage.removeItem(TOKEN_KEY);
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
-export function authHeaders(): HeadersInit {
+function getUser(): any | null {
+  if (typeof window === "undefined") return null;
+  const user = localStorage.getItem(USER_KEY);
+  if (!user) return null;
+  try {
+    return JSON.parse(user);
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearToken(): void {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+}
+
+function authHeaders(): HeadersInit {
   const token = getToken();
   if (!token) return {};
   return {
@@ -27,3 +49,12 @@ export function authHeaders(): HeadersInit {
   };
 }
 
+export {
+  getApiBaseUrl,
+  saveToken,
+  getToken,
+  saveUser,
+  getUser,
+  clearToken,
+  authHeaders
+};

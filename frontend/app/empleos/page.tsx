@@ -1,14 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import EmpleosBoard, { Empleo } from "@/components/empleos/EmpleosBoard";
-import { authHeaders, clearToken, getApiBaseUrl, getToken } from "@/lib/auth";
+import { authHeaders, clearToken, getApiBaseUrl, getToken, saveUser } from "@/lib/auth";
 
 type ApiResponse = {
   success: boolean;
   data: Empleo[];
   total: number;
+};
+
+type MeResponse = {
+  success: boolean;
+  user: {
+    can_create_offer?: boolean;
+  };
 };
 
 export default function EmpleosPage() {
@@ -17,6 +24,31 @@ export default function EmpleosPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [empleos, setEmpleos] = useState<Empleo[]>([]);
+  const [canCreateOffer, setCanCreateOffer] = useState(false);
+
+  const fetchJobs = useCallback(async () => {
+    try {
+      const jobsResponse = await fetch(`${getApiBaseUrl()}/puentes`, {
+        headers: { Accept: "application/json", ...authHeaders() },
+        cache: "no-store",
+      });
+
+      if (!jobsResponse.ok) {
+        setError("No se pudieron cargar las ofertas.");
+        return;
+      }
+
+      const payload: ApiResponse = await jobsResponse.json();
+      if (!payload.success) {
+        setError("No se pudieron cargar las ofertas.");
+        return;
+      }
+
+      setEmpleos(payload.data);
+    } catch {
+      setError("Error de conexión con el servidor.");
+    }
+  }, []);
 
   useEffect(() => {
     const token = getToken();
@@ -37,23 +69,12 @@ export default function EmpleosPage() {
           return;
         }
 
-        const jobsResponse = await fetch(`${getApiBaseUrl()}/puentes`, {
-          headers: { Accept: "application/json", ...authHeaders() },
-          cache: "no-store",
-        });
+        const mePayload: MeResponse = await meResponse.json();
+        setCanCreateOffer(!!mePayload?.user?.can_create_offer);
+        saveUser(mePayload.user);
 
-        if (!jobsResponse.ok) {
-          setError("No se pudieron cargar las ofertas.");
-          return;
-        }
+        await fetchJobs();
 
-        const payload: ApiResponse = await jobsResponse.json();
-        if (!payload.success) {
-          setError("No se pudieron cargar las ofertas.");
-          return;
-        }
-
-        setEmpleos(payload.data);
       } catch {
         setError("Error de conexión con el servidor.");
       } finally {
@@ -63,7 +84,7 @@ export default function EmpleosPage() {
     };
 
     verifyAndLoad();
-  }, [router]);
+  }, [router, fetchJobs]);
 
   const handleLogout = () => {
     clearToken();
@@ -85,7 +106,7 @@ export default function EmpleosPage() {
           <p className="text-red-600">{error}</p>
           <button
             type="button"
-            onClick={() => router.refresh()}
+            onClick={() => { setError(""); setLoading(true); fetchJobs().finally(() => setLoading(false)); }}
             className="mt-4 rounded-md bg-sky-500 px-4 py-2 font-semibold text-white"
           >
             Reintentar
@@ -95,6 +116,12 @@ export default function EmpleosPage() {
     );
   }
 
-  return <EmpleosBoard empleos={empleos} onLogout={handleLogout} />;
+  return (
+    <EmpleosBoard
+      empleos={empleos}
+      onLogout={handleLogout}
+      canCreateOffer={canCreateOffer}
+      onOfferCreated={fetchJobs}
+    />
+  );
 }
-

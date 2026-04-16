@@ -25,6 +25,15 @@ class User extends Authenticatable
         'password',
         'user_type',
         'api_token',
+        'apellidos',
+        'dni_cif',
+        'fecha_nacimiento',
+        'ciclo',
+        'departamento',
+        'especialidad',
+        'nombre_comercial',
+        'web',
+        'direccion',
     ];
 
     

@@ -1,39 +1,44 @@
-const caracteristicas = [
-  {
-    titulo: "Busqueda Inteligente",
-    descripcion: "Encuentra las mejores oportunidades segun tu perfil",
-    icono: "🔍",
-  },
-  {
-    titulo: "Gestion Completa",
-    descripcion: "Administra aplicaciones y ofertas desde un solo lugar",
-    icono: "📄",
-  },
-  {
-    titulo: "Crecimiento Profesional",
-    descripcion: "Desarrolla tu carrera con las mejores oportunidades",
-    icono: "↗",
-  },
-];
-
 export default function FeaturesSection() {
+  const features = [
+    {
+      title: "Gestión Eficiente",
+      desc: "Todas las ofertas centralizadas con herramientas de filtrado avanzado.",
+      icon: "⚡",
+    },
+    {
+      title: "Seguridad Garantizada",
+      desc: "Protección de datos y autenticación de última generación.",
+      icon: "🛡️",
+    },
+    {
+      title: "Notificaciones Real-time",
+      desc: "Recibe alertas instantáneas sobre nuevas candidaturas y cambios de estado.",
+      icon: "🔔",
+    },
+    {
+      title: "Interfaz Intuitiva",
+      desc: "Diseño moderno pensado para la máxima productividad y facilidad de uso.",
+      icon: "🎨",
+    },
+  ];
+
   return (
-    <section className="mt-10 bg-[#e8edf1] py-14">
-      <div className="mx-auto max-w-6xl px-4">
-        <h2 className="mb-10 text-center text-4xl font-bold">Caracteristicas Principales</h2>
-        <div className="grid gap-8 md:grid-cols-3">
-          {caracteristicas.map((feature) => (
-            <article key={feature.titulo} className="text-center">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-sky-500 text-xl text-white">
-                {feature.icono}
+    <section className="bg-white py-24">
+      <div className="mx-auto max-w-7xl px-6 text-center">
+        <h2 className="text-3xl font-black text-black sm:text-4xl mb-16">¿Por qué elegir Puente Joven?</h2>
+
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+          {features.map((feature, i) => (
+            <div key={i} className="flex flex-col items-center group transition-all duration-300">
+              <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl bg-[#00b4ff]/5 text-3xl shadow-sm ring-1 ring-[#00b4ff]/10 transition-all duration-500 group-hover:bg-black group-hover:ring-black">
+                <span className="transition-transform duration-500 group-hover:scale-125">{feature.icon}</span>
               </div>
-              <h3 className="text-2xl font-semibold">{feature.titulo}</h3>
-              <p className="mt-2 text-slate-500">{feature.descripcion}</p>
-            </article>
+              <h3 className="mb-3 text-xl font-black text-black">{feature.title}</h3>
+              <p className="text-slate-500 font-medium leading-relaxed">{feature.desc}</p>
+            </div>
           ))}
         </div>
       </div>
     </section>
   );
 }
-

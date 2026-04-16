@@ -1,48 +1,48 @@
-const perfiles = [
-  {
-    titulo: "Alumno",
-    descripcion: "Encuentra practicas profesionales y oportunidades laborales",
-    items: ["Busca ofertas de empleo", "Aplica a practicas", "Crea tu perfil profesional"],
-    icono: "🎓",
-  },
-  {
-    titulo: "Profesor",
-    descripcion: "Conecta a tus estudiantes con empresas y oportunidades",
-    items: ["Gestiona alumnos", "Supervisa practicas", "Colabora con empresas"],
-    icono: "👥",
-  },
-  {
-    titulo: "Empresa",
-    descripcion: "Encuentra talento joven y publica ofertas de empleo",
-    items: ["Publica ofertas", "Busca candidatos", "Gestiona aplicaciones"],
-    icono: "🏢",
-  },
-];
-
 export default function ProfilesSection() {
+  const profiles = [
+    {
+      title: "Alumnos",
+      desc: "Accede a las mejores ofertas de empleo y prácticas adaptadas a tu perfil académico.",
+      icon: "🎓",
+      color: "bg-[#00b4ff]/10 text-[#00b4ff]",
+    },
+    {
+      title: "Empresas",
+      desc: "Encuentra el talento que tu organización necesita entre nuestra comunidad de alumnos.",
+      icon: "🏢",
+      color: "bg-black text-white",
+    },
+    {
+      title: "Profesores",
+      desc: "Supervisa y conecta a tus alumnos con oportunidades reales en el sector.",
+      icon: "👨‍🏫",
+      color: "bg-slate-100 text-black",
+    },
+  ];
+
   return (
-    <section className="mx-auto max-w-6xl px-4 py-8">
-      <h2 className="mb-10 text-center text-4xl font-bold">Quien Eres?</h2>
-      <div className="grid gap-6 md:grid-cols-3">
-        {perfiles.map((perfil) => (
-          <article
-            key={perfil.titulo}
-            className="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm"
-          >
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-sky-100 text-2xl">
-              {perfil.icono}
+    <section id="profiles" className="bg-slate-50 py-24">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-black text-black sm:text-4xl">Un Ecosistema Diseñado para Todos</h2>
+          <p className="mt-4 text-lg text-slate-500 font-medium max-w-2xl mx-auto">Soluciones específicas para cada actor del mercado laboral educativo.</p>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-3">
+          {profiles.map((profile, i) => (
+            <div 
+              key={i} 
+              className="group relative rounded-[2.5rem] bg-white p-10 shadow-xl shadow-slate-200/50 ring-1 ring-slate-100 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-[#00b4ff]/10"
+            >
+              <div className={`mb-8 flex h-20 w-20 items-center justify-center rounded-[1.8rem] text-3xl shadow-inner transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 ${profile.color}`}>
+                {profile.icon}
+              </div>
+              <h3 className="mb-4 text-2xl font-black text-black">{profile.title}</h3>
+              <p className="text-slate-500 font-medium leading-relaxed">{profile.desc}</p>
             </div>
-            <h3 className="text-3xl font-bold">{perfil.titulo}</h3>
-            <p className="mt-3 text-slate-500">{perfil.descripcion}</p>
-            <ul className="mt-5 space-y-2 text-left text-slate-700">
-              {perfil.items.map((item) => (
-                <li key={item}>✓ {item}</li>
-              ))}
-            </ul>
-          </article>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
 }
-

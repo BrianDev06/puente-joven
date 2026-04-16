@@ -7,6 +7,7 @@ enum UserType: string
     case Admin = 'admin';
     case Profesor = 'profesor';
     case Alumno = 'alumno';
+    case Empresa = 'empresa';
 
     public static function forMigration(): array
     {

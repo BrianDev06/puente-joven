@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\PuenteController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\PermissionController;
+use App\Http\Controllers\Api\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Profile API
+Route::middleware(ApiTokenAuth::class)->group(function () {
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+});
+
 // Auth API
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
@@ -38,8 +45,10 @@ Route::prefix('auth')->group(function () {
 Route::get('/puentes', [PuenteController::class, 'index']);
 Route::get('/puentes/{id}', [PuenteController::class, 'show']);
 
-// CRUD de usuarios (protegido por token)
+// CRUD de usuarios y puentes (protegidos por token)
 Route::middleware(ApiTokenAuth::class)->group(function () {
+    Route::post('/puentes', [PuenteController::class, 'store']);
+
     Route::get('/users', [UserController::class, 'index'])->middleware('permission:users.view');
     Route::post('/users', [UserController::class, 'store'])->middleware('permission:users.create');
     Route::get('/users/{user}', [UserController::class, 'show'])->middleware('permission:users.view');
